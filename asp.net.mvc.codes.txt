@@ -15,3 +15,229 @@ if(ModelState.IsValid == false)
 	<partial name="_validationScriptsPartial" />
 }
 
+<a asp-page="" class="" ></a>
+
+
+<a asp-page="Edit" asp-route-[name-you-want] class="" > Edit </a>
+<a asp-page="Edit" asp-route-id="@item.Id" class="" > Edit </a>
+
+[BindProperty]
+public Book _book {get;set;}
+
+
+<input type="hidden" asp-for="@Book.Id"/>
+
+<input type="text" asp-for="@Book.Id" />
+
+
+-- delete 
+
+<button onclie ="return confirm('Are you want to delete')" asp-page-handler="Delete" asp-route-id="item.Id" />
+
+on index.cshtml  > 
+
+// on post handler OnPost[Name]
+public async Task<IActionResult> OnPostDelete(int id)
+{	
+	var book = // get book 
+	if( book is null ) 
+		return NotFound();
+	// delete book 
+	return LocalRedirect("Index");
+	return RedirectToPage("Index");
+}
+
+-- jquery-libs
+-- sweetalert  >> sweetalert2.github.com
+-- toastr >> codeseven.github.com
+-- datatables >> datatables.net
+
+-- need to add webapis ; 
+-- add  Controllers dir to proejct ( Mvc of Api Controller) 
+-- add api support to services 
+
+builder.Services.AddControllersWithViews();
+
+-- configure middleware
+app.UseEndpoints(endPoints => {
+	endPoints.MapControllers();
+	endPoints.MapRazorPages();
+});
+
+
+[Route("api/book")]
+[ApiController]
+public class BookApiController : ApiController {
+	
+	// code heres
+
+	public asynct Task<IActionResult> GetAll(){
+		var result = // query 
+		return new Json( new {data = result});
+	}
+}
+
+
+// inside index.cshtml
+// add table to datatables 
+
+<table id="book_grid" class="table" style="width:100%">
+	<tr>
+		<th> Fname </th>
+		<th> Lname </th>
+	</tr>
+</table>
+
+@section Scripts
+{
+	<script src="~/js/pages/book/bookgrid.js" />
+}
+
+
+bookgrid.js
+----------------
+var dataTable;
+
+$(document).ready(function(){
+	loadDataTable();
+});
+
+
+function loadDataTable(){
+	datatable = $("#book_grid").DataTable({
+		"ajax" : {
+			"url" : "/api/book/getall",
+			"type" : "GET" , 
+			"datatype" : "json"
+		},
+		"columns" : [ // should be camelcase
+			{"data": "fname" , "width": "30%"},
+			{"data": "lname" , "width": "30%"},
+			{
+				"data": "id" ,
+				"render" : function(data){
+					return `<div class='text-center'>	
+						<a href="/BookList/Edit?id=${data}" class="btn btn-success text-white" style="cursor:pointer"> Edit </a>
+						<button onclick="onDelete('/api/book?id=' + ${data}) class="btn btn-danger text-white" style="cursor:pointer"> Delete </button>
+					</div>`;
+				},
+				"width": "30%"
+			},
+		],
+		"languages" : {
+			"emptyTable" : "داده ای یافت نشد",
+		},
+		"width" : "100%"
+	});
+}
+
+
+// delete api call 
+
+[HttpDelete]
+public task<IActionResult> Delete()
+{
+	var book = // get book 
+	if(book is null)
+		return Json(new {Success = false , Message = "رکورد مورد نظر یافت نشد"});
+	// save 
+	return Json(new {Success = true , Message = "عملیات با موفقیت انجام شد"});
+}
+
+// now we add delete js function 
+
+function onDelete(url){
+	swal({
+		title : "آیا مطمئن هستید؟",
+		text  : "این عملیات تغییر ناپذیر است",
+		icon  : "warning",
+		buttons: true , 
+		dangerMode : true
+	}).then((willDelete) => {
+		if(willDelete){
+			$.ajax({
+				type : "Delete",
+				url  : url ,
+				success : function(data){
+					if(data.success){
+						toastr.success(data.message);
+						datatable.ajax.reload();
+					}else{
+						toastr.error(data.message);
+					}			
+				}
+			});
+		}
+	});
+}
+
+
+
+
+-- add this package 
+Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+
+>> builder.Services.AddRazrorPages().AddRazorRuntimeCompilation();
+
+ // select project with individual idnetity 
+
+>> add this options 
+
+builder.Services.Configure<CookiePoilicyOptions>(options =>
+	{
+		options.CheckConsentNeeded = context => true; 
+		options.MinimumSameSitePolicy = SameSiteMode.None;
+	}
+)
+
+
+//builder.Services.AddDefaultIdentity<IdentityUser>()
+//	//.AddDefaultUI(UIFramework.Bootstrap4)
+//	.AddEntityFrameworkStores<ApplicationDbContext>();
+
+// to use rolemanager as well
+builder.Services.AddIdentity<IdentityUser,IdentityRole>()
+	//.AddDefaultUI(UIFramework.Bootstrap4)
+	.AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+	app.UseAuthentication();
+	app.UseAuthorization();
+
+
+-- in view 
+<environment include="Development">
+	<link rel="stylesheet" href="~/assets/css/bootstrap.css" />
+</environment>
+
+<environment exclude="Development">
+	<link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+	<script  src="cdn" 
+		asp-fallback-src="~/libs" 
+		asp-fallback-test="window.jQuery" 
+		crossorigin="anonymouse"
+		integrity="sha256-asdfasjdf"
+</environment>
+
+
+
+-- for adding all scaffolded identity pages 
+right click on 'identity' add > New scaffolded Item > Idenitty 
+
+
+
+<form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+	<label asp-for="BookCreateDto.Name" ></lable>
+</form>
+
+
+@section Scripts{
+	@{ Html.RenderPartialAsync("_validationScriptsPartial"); }
+}
+
+
+
+public class ApplicationUser : IdentityUser{
+	public string Fname {get;set;}
+	public string Lname {get;set;}
+}
