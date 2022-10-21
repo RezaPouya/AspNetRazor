@@ -1,0 +1,35 @@
+﻿@page
+@model Error_404Model
+@{
+    ViewData["Title"] = "Error";
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <title>صفحه ی مورد نظر یافت نشد</title>
+    <link rel="stylesheet" href="css/app-light.css" id="lightTheme">
+    <link rel="stylesheet" href="css/app-dark.css" id="darkTheme" disabled>
+</head>
+<body class="light rtl">
+    <div class="wrapper vh-100">
+        <div class="align-items-center h-100 d-flex w-50 mx-auto">
+            <div class="mx-auto text-center">
+                <h1 class="display-1 m-0 font-weight-bolder text-danger" style="font-size:80px;">خطای 404</h1>
+                <h1 class="mb-1 text-muted font-weight-bold">صفحه مورد نظر پیدا نشد.!</h1>
+                <h6 class="mb-3 text-muted">آدرس وارد شده صحیح نیست.</h6>
+                <a href="./index" class="btn btn-lg btn-primary px-5">برگشت به صفحه اصلی</a>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/apps.js"></script>
+</body>
+</html>

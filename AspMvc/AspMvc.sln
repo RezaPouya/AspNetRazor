@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspMvc", "AspMvc\AspMvc.csproj", "{4C69A149-EAF5-4493-834B-5F6DFE4F98F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{36810A45-3057-491B-919C-BDE9D76F7672}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2B248E76-C7EE-4153-A998-4BCC40579347}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspRazor", "AspRazor\AspRazor.csproj", "{9F00CAB8-3C0A-4352-BC8B-D433B2D85A17}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C69A149-EAF5-4493-834B-5F6DFE4F98F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C69A149-EAF5-4493-834B-5F6DFE4F98F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C69A149-EAF5-4493-834B-5F6DFE4F98F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C69A149-EAF5-4493-834B-5F6DFE4F98F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F00CAB8-3C0A-4352-BC8B-D433B2D85A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F00CAB8-3C0A-4352-BC8B-D433B2D85A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F00CAB8-3C0A-4352-BC8B-D433B2D85A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F00CAB8-3C0A-4352-BC8B-D433B2D85A17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9879A26C-52D8-4D58-834E-314948221914}
+	EndGlobalSection
+EndGlobal
