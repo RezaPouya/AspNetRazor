@@ -1,0 +1,14 @@
+این روز ها با توجه به شرایط اینترنت که همه در جریانش هستیم یکی از مشکلات کار کردن با گیت هاب هست که که همچین اروری رو دریافت می کنیم
+
+OpenSSL SSL_connect: Connection was reset in connection to github.com:443
+
+برای حل این مشکل cmd رو باز کنید و کامند زیر رو بنویسید
+
+git config --global http.sslBackend schannel
+
+اگر مشکل حل نشد وارد فولدر گیت هر پروژه بشید و فایل config رو ویرایش کرده و عبارت زیر رو به انتهاش اضافه کنید
+
+[http]
+       sslBackend = schannel
+
+

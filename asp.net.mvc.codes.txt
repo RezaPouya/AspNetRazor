@@ -1,0 +1,17 @@
+[BindProperty]
+
+
+if(ModelState.IsValid == false)
+	return Page();
+
+-- server side validation 
+<div class="text-danger" asp-validation-summary="ModelOnly">
+<span asp-validation-for"Book.Name"></span>
+
+
+-- client side validation 
+
+@section Scripts{
+	<partial name="_validationScriptsPartial" />
+}
+
