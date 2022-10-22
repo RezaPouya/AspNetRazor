@@ -1,0 +1,73 @@
+public interface IDbInitializer {
+    void Initialize();
+}
+
+
+public class DbInitializer  : IDbInitializer
+{
+    private readonly ApplicationDbContext _dbContext;
+    private readonly UserManager<IdentityUser> _userManager ; 
+    private readonly RoleManager<IdentityRole> _roleManager ; 
+
+    public DbInitializer(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+        // initialize rolemanager , and UserManager with DI
+    }
+
+    public void Initialize()
+    {
+        try
+        {
+            if(_dbContext.Database.GetPendingMigration().Any()){
+                _dbContext.Database.Migrate();
+            }
+
+            CreateRoles();
+        }
+        catch(Exception ex){
+
+        }
+    }
+
+    private void CreateRoles(){
+        if(_db.Roles.Any(p=> p.Name == "admin"))
+            return;
+
+        _roleManager.CreateAsync(new IdentityRole("admin" )).GetAwaiter().GetResult();
+    }
+
+    private void CreateUsers(){
+        if(_db.Users.Any(p=> p.UserName == "admin@site.ir"))
+            return;
+
+        var user = new IdentityUser {
+            UserName = "admin@site.ir" ,
+            Email = "admin@site.ir" , 
+            Name = "Reza Pouya",
+            EmailConfirmed = true, 
+            PhoneNumber = "+9809383810430"
+        }
+
+        _userManager.CreateAsync(user , "#$Admin69!").GetAwaiter().GetResult();
+
+        IdentityUser adminUser =  _dbContext.Users.FirstOrDefaultAsync(u=>u.Email.Equal(user.Email));
+
+        _userManager.AddToRoleAsync(adminUser , "admin").GetAwaiter().GetResult();
+    }
+}
+
+
+// inside startup   
+
+builder.Services.AddScoped<IDbInitializer , DbInitializer>(); 
+
+
+now inside Configure method 
+
+public void Configure(IApplicationBuilder app , IHostirngEnvironment env , IDbInitializer dbInitializer){
+
+
+    dbInitializer.Initialize();
+}
+

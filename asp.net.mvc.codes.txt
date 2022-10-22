@@ -241,3 +241,144 @@ public class ApplicationUser : IdentityUser{
 	public string Fname {get;set;}
 	public string Lname {get;set;}
 }
+
+
+<a aasp-route="/Account/Register" asp-area="Identity" class="btn btn-link">Register</a>
+
+
+[Authorize[Roles = "admin"]]
+
+
+if(User.IsInRole()){
+
+}
+
+
+-- send free email (sendGrid)
+-- nuget SendGrid
+
+
+public class EmailOptions {
+	public string SendGridKey {get;set;}
+}
+
+
+public class EmailSender : IEmailSender {
+
+	private readonly EmailOptions _options;
+
+	public EmailSender(IOptions<EmailOptions> options){
+		_options = options.Value;
+	}
+
+	public Task SendEmailAsync(string email, string subject, string htmlMessage)
+	{
+		using(var client = new SendGridClient(_options.SendGridKey)){
+			var msg = new SendGridMessage(){
+				From =  new EmailAddress("info@mysite.ir",  "My Site" ),
+				subject = subject.Trim(),
+				PlainTextContent = htmlMessage,
+				HtmContent = htmlMessage,  
+			}
+
+			msg.AddTo(new EmailAddress(msg));
+
+			try{
+				return client.SendEmailAsync(msg);
+			}
+			catch(Exception ex){
+				
+			}
+
+			retur null ; 
+
+		}
+	}
+}
+
+-- insdie serivce 
+
+builder.Services.AddSingleton<IEmailSender , EmailSender>();
+builder.Configure<EmailOptions>(configuration);
+
+
+private readonly ApplicationDbContext _dbContext ; 
+
+
+var user = _dbContext.Users.AsNotTracking().FirstOrDefault(p=> p.Email.Equal(email.toLower().trim())); 
+
+if(user is null or user.EmailConfirmed == false)
+	return RedirectToPage("VerifyEmail" , new {id = input.Email});
+
+
+
+<select asp-for=""  asp-items=@(new SelectList(Model.List , "Id" , "Name"))) class="" ></select>
+
+<button asp-page-Handler="RemoveFromCart" asp-route-ServiceId="@Model.ServiceId" class="" ></button>
+
+
+@section Scripts {
+	<partial name="_validationScriptsPartial" />
+	<script src="" ></script>
+	<script>
+		function validateInput(){
+			var miles = document.getElementById("txtMiles").value;
+			if(miles < 1){
+				swal("Error!" , "Miles cannot be empty or 0!" );
+				return false;
+			}
+			return true;
+		}
+	</script>
+}
+
+
+
+var claimsIdentity = (claimsIdentity)User.Identity ; 
+var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+if(claim is null )
+	return RedirectToPage("/Account/Login" , new {area  = identity });
+
+
+if(User.IsInRole())
+	return RedirectToPage("/Users/Index");
+
+
+UserViewComponent.cs --> ViewComponent is mandatory 
+
+
+public class UserNameViewComponent : ViewComponent {
+	 private readonly ApplicationDbContext _dbContext;
+
+	 public UserViewComponent(ApplicationDbContext dbContext){
+		_db = db; 
+	 }
+
+	 public async Task<IViewComponentResult> InvokeAsync(){
+		var claimsIdentity = (claimsIdentity)User.Identity;
+		var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+		var userFromDb = await _dbContext.Users.AsNotTracking().Select().FirstOrDefaultAsync(p=> p.Id == claims.Value );
+
+		retur View(userFromDb);
+	 }
+}
+
+
+>> Shared >> Components >> add directories 
+	-- name should be matched with ViewComponent
+	UserName
+		Default.cshtml
+
+
+		Hi @(Model.FullName)
+ 
+ now we have to consume it ; in page or partial view 
+
+ @await Component.InvokeAsync("UserName")
+
+
+ viewComponent --> has attached page model 
+
+
+  

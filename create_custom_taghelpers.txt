@@ -1,0 +1,88 @@
+create TagHelpers dir 
+
+PageLinkTagHelper.cs ( class)
+
+[HtmlTargetElement("div" , Attributes = "page-model")]
+public class PageLinkTagHelper 
+{
+    private readonly IUrlHelperFactory _urlHelperFactory;
+
+    [ViewContext
+    [HttmlAttributeNotBound]
+    public ViewContext ViewContext {get;set;} // provide access to httpContext, httpRequest, httpResponse, etc ... 
+
+    public PageLinkTagHelper(IUrlHelperFactory urlHelperFactory)
+    {
+        _urlHelperFactory = urlHelperFactory;
+    }
+
+    public PageInfoModel PageModel {ge;set;}
+    public string PageAction {get;set;} // if user click on this , which action (page) should be called ( redirected to )
+    public string PageClass {get;set;}
+    public string PageClassNormal {get;set;}
+    public string PageClassSelected {get;set;}
+
+
+    // TagHelperContext : contains information about executing TagHelperContext
+    // TagHelperOutput : contains information about result of taghelper execution
+    public override void Process(TagHelperContext context, TagHelperOutput output)
+    {
+        //base.Process(context, output);
+        IUrlHelper urlHelper = _urlHelperFactory.getUrlHelper(ViewContext);
+        
+        TagBuilder result = new TagBuilder("div");
+
+        for(int i = 10 ; i <= PageModel.TotalPages ; i++)
+        {
+            TagBuilder tag = new TagBuilder("a");
+            string url = PageModel.UrlParam.Replace(":" , i.ToString());
+            tag.Attributes["href"] = url ; 
+            tag.AddCssClass(PageClass);
+            tag.AddCssClass( i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+            tag.InnerHtml.Append(i.ToString());
+            result.InnerHtml.Append(tag);
+        }
+
+        output.Content.AppendHtml(result);
+    }
+}
+
+// in page model 
+StringBuild param = new StringBuilder();
+param.Append("/Users?ProductPage=:");
+
+
+// add tagHelper insdie _import
+@addTagHelper [projectName].TagHelpers.*,[projectName]
+
+// inside index.cshtml 
+
+
+<tr>
+    <td>
+        <div page-model="@Model.PageInfoDto" asp-action="Index" page-class="" page-class-normal="" page-class-active=""></div>
+    </td>
+</tr>
+
+
+
+/////////// 
+// add search-criteria 
+
+@HtmlEditor("searchEmail" , new {HtmlAttributes = new { @class = "form-control" , plassholder = "Email ... "} })
+
+
+// 
+public async Task Get(int page = 1 , string email = null , CancelationToken cancelationToken = default ){
+
+    var queryable = _db.Users.AsNoTracking().AsQueryable();
+
+    if(string.IsNullOrEmpty(email) == false){
+        queryable.Where(p=>p.email.ToLower().Trim().contains(email.ToLower().Trim()));
+    }
+
+    PageModel = await queryable.Select().ToListAsync(cancelationToken);
+
+    result Page();
+
+}
